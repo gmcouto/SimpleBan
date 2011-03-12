@@ -1,0 +1,29 @@
+name: SimpleBan
+version: 1.0
+main: org.anjocaido.simpleban.SimpleBan
+website: http://www.anjocaido.info/
+description: Provides a simple banning system for Offline-mode servers.
+authors:
+  - AnjoCaido
+  - Gabriel Couto
+commands:
+  sban:
+    description: Ban player name and IP. (It has player name matching)
+    usage: /<command> <playerName>
+    permission: simpleban.sban
+  sbanhistory:
+    description: Ban a player which is not online using IP history.
+    usage: /<command> <playerName>
+    permission: simpleban.sbanhistory
+  sunban:
+    description: Unban the player with given name.
+    usage: /<command> <playerName>
+    permission: simpleban.sunban
+  sunbanip:
+    description: Remove all matching IPs from ban list.
+    usage: /<command> <ip>
+    permission: simpleban.sunbanip
+  sreload:
+    description: Reload bans file.
+    usage: /<command>
+    permission: simpleban.sreload
