@@ -266,10 +266,6 @@ public class SimpleBan extends JavaPlugin {
             return;
         }
         banWithNameAndAddress(player.getName(), player.getAddress().getAddress().getHostAddress());
-        try {
-            player.remove();
-        } catch (Exception e) {
-        }
     }
 
     public void banWithNameAndAddress(String playerName, String address) {
@@ -303,10 +299,6 @@ public class SimpleBan extends JavaPlugin {
             return;
         }
         banOnlyIp(player.getAddress().getAddress().getHostAddress());
-        try {
-            player.remove();
-        } catch (Exception e) {
-        }
     }
 
     public void banOnlyIp(String address) {
@@ -393,10 +385,6 @@ public class SimpleBan extends JavaPlugin {
             } else {
                 if (isNameBanned(player)) {
                     kickBanWarning(player);
-                    try {
-                        player.remove();
-                    } catch (Exception e) {
-                    }
                     return true;
                 } else {
                     return false;
@@ -408,10 +396,6 @@ public class SimpleBan extends JavaPlugin {
                     //IF HIS NAME IS BANNED TOO, ACT NORMALLY
                     banPlayer(player);
                     kickBanWarning(player);
-                    try {
-                        player.remove();
-                    } catch (Exception e) {
-                    }
                 } else {
                     //IF NAME IS NOT BANNED TOO, CHECK IF THAT NAME IS FIRST TIME
                     if (doesPlayerExist(player.getName())) {
@@ -422,10 +406,6 @@ public class SimpleBan extends JavaPlugin {
                         //IF PLAYER NAME DOES NOT EXISTS, BAN THE NEW NAME TOO
                         banPlayer(player);
                         kickBanWarning(player);
-                        try {
-                            player.remove();
-                        } catch (Exception e) {
-                        }
                     }
                 }
                 return true;
