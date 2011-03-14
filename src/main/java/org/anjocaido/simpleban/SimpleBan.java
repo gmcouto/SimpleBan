@@ -67,7 +67,7 @@ public class SimpleBan extends JavaPlugin {
 
         listener = new SimpleBanPlayerListener(this);
         this.getServer().getPluginManager().registerEvent(Type.PLAYER_LOGIN, listener, Priority.Low, this);
-        this.getServer().getPluginManager().registerEvent(Type.PLAYER_JOIN, listener, Priority.Low, this);
+        this.getServer().getPluginManager().registerEvent(Type.PLAYER_JOIN, listener, Priority.Monitor, this);
         System.out.println(this.getDescription().getName() + " " + this.getDescription().getVersion() + " was loaded sucessfully!");
     }
 
@@ -213,7 +213,7 @@ public class SimpleBan extends JavaPlugin {
             }
             return false;
         } else {
-            sender.sendMessage(ChatColor.RED+"You don't have permissions to do this.");
+            sender.sendMessage(ChatColor.RED + "You don't have permissions to do this.");
         }
         return false;
     }
@@ -306,11 +306,7 @@ public class SimpleBan extends JavaPlugin {
     }
 
     public void kickBanWarning(Player player) {
-        try {
-            player.kickPlayer("You got hit by the Ban Hammer!");
-            System.out.println(ChatColor.RED + "The player " + player.getName() + " has been kicked because is banned!");
-        } catch (Exception e) {
-        }
+        this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Kicker(player), 100L);
     }
 
     public void unbanPlayer(String playerName) {
@@ -418,7 +414,7 @@ public class SimpleBan extends JavaPlugin {
 
     public boolean doesPlayerExist(String playerName) {
         if (playerExists.containsKey(playerName.toLowerCase())) {
-            System.out.println("Does " + playerName + " exists? " + playerExists.get(playerName.toLowerCase()));
+            //System.out.println("Does " + playerName + " exists? " + playerExists.get(playerName.toLowerCase()));
             return playerExists.get(playerName.toLowerCase());
         }
         return false;
@@ -452,6 +448,24 @@ public class SimpleBan extends JavaPlugin {
         @Override
         public boolean accept(File file, String string) {
             return string.equalsIgnoreCase(name);
+        }
+    }
+
+    public class Kicker implements Runnable {
+
+        private Player player;
+
+        public Kicker(Player player) {
+            this.player = player;
+        }
+
+        @Override
+        public void run() {
+            try {
+                player.kickPlayer("You got hit by the Ban Hammer!");
+                System.out.println(ChatColor.RED + "The player " + player.getName() + " has been kicked because is banned!");
+            } catch (Exception e) {
+            }
         }
     }
 }

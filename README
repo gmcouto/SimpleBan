@@ -1,5 +1,5 @@
 [B]SimpleBan[/B] - Simple, but hardcore ban directed for offline-mode server needs.
-[B]Version:[/B] v1.1
+[B]Version:[/B] v1.2
 
 [b]You need GroupManager(+FakePermissions) / Permissions to use this.[/b]
 
@@ -51,6 +51,8 @@ Now you can do that automatically with one single command.
 https://github.com/downloads/gmcouto/SimpleBan/SimpleBan.jar
 
 ChangeLog:
+1.2
+- Trying to create a workaround to kick player and not give exceptions. (I created a delay of 5 seconds before every kick)
 1.1
 - Fixed permissions, which I forgot to check before executing commands.
 - Added some commands to ban only IPs… This is useful when you find someone using your username.
