@@ -1,5 +1,5 @@
 name: SimpleBan
-version: 1.0
+version: 1.1
 main: org.anjocaido.simpleban.SimpleBan
 website: http://www.anjocaido.info/
 description: Provides a simple banning system for Offline-mode servers.
@@ -15,6 +15,14 @@ commands:
     description: Ban a player which is not online using IP history.
     usage: /<command> <playerName>
     permission: simpleban.sbanhistory
+  sbanip:
+    description: Ban an specific IP.
+    usage: /<command> <ip>
+    permission: simpleban.sbanip
+  sbanipfromname:
+    description: Ban an specific IP using a player name.
+    usage: /<command> <playerName>
+    permission: simpleban.sbanipfromname
   sunban:
     description: Unban the player with given name.
     usage: /<command> <playerName>

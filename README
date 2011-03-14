@@ -1,5 +1,5 @@
 [B]SimpleBan[/B] - Simple, but hardcore ban directed for offline-mode server needs.
-[B]Version:[/B] v1.0
+[B]Version:[/B] v1.1
 
 [b]You need GroupManager(+FakePermissions) / Permissions to use this.[/b]
 
@@ -13,7 +13,7 @@ Now you can do that automatically with one single command.
 [B]Features:[/B]
 • Ban Name + IP with one single command.
 • Ban new IP automatically if a player connects with a name matching an already banned player.
-• Ban [b]new/b] player name automatically if matches an already banned IP. (if that name is connected for the first time on the server)
+• Ban [b]new[/b] player name automatically if matches an already banned IP. (if that name is connected for the first time on the server)
 • Ban Name + IP even if player is offline, because it creates an history of last-IP per username.
 
 [B]Commands[/B]:
@@ -26,6 +26,14 @@ Now you can do that automatically with one single command.
     description: Ban a player which is not online using IP history.
     usage: /<command> <playerName>
     permission: simpleban.sbanhistory
+  sbanip:
+    description: Ban an specific IP.
+    usage: /<command> <ip>
+    permission: simpleban.sbanip
+  sbanipfromname:
+    description: Ban an specific IP using a player name.
+    usage: /<command> <playerName>
+    permission: simpleban.sbanipfromname
   sunban:
     description: Unban the player with given name.
     usage: /<command> <playerName>
@@ -41,6 +49,11 @@ Now you can do that automatically with one single command.
 
 [B]Latest Build Download:[/B]
 https://github.com/downloads/gmcouto/SimpleBan/SimpleBan.jar
+
+ChangeLog:
+1.1
+- Fixed permissions, which I forgot to check before executing commands.
+- Added some commands to ban only IPs… This is useful when you find someone using your username.
 
 
 ===========================================

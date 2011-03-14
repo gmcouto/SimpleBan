@@ -119,55 +119,101 @@ public class SimpleBan extends JavaPlugin {
             Player sending = (Player) sender;
             hasPerm = ((Permissions) perm).getHandler().permission(sending, "simpleban." + label);
         }
-        if (label.equals("sban")) {
-            if (args.length != 1) {
-                sender.sendMessage(ChatColor.RED + "Review your arguments!");
-                return false;
+        if (hasPerm) {
+            if (label.equals("sban")) {
+                if (args.length != 1) {
+                    sender.sendMessage(ChatColor.RED + "Review your arguments!");
+                    return false;
+                }
+                List<Player> matchPlayer = this.getServer().matchPlayer(args[0]);
+                if (matchPlayer.size() != 1) {
+                    sender.sendMessage(ChatColor.RED + "Player not found!");
+                    return false;
+                }
+                banPlayer(matchPlayer.get(0));
+                kickBanWarning(matchPlayer.get(0));
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player " + matchPlayer.get(0).getName() + " has been banned sucessfully!");
+                return true;
+            } else if (label.equals("sbanhistory")) {
+                if (args.length != 1) {
+                    sender.sendMessage(ChatColor.RED + "Review your arguments!");
+                    return false;
+                }
+                String ip = getHistory(args[0]);
+                if (ip == null) {
+                    sender.sendMessage(ChatColor.RED + "Player not found in history!");
+                    return false;
+                }
+                banWithNameAndAddress(args[0], ip);
+                for (Player p : this.getServer().getOnlinePlayers()) {
+                    generalBanCheckAction(p);
+                }
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player " + args[0] + " has been banned sucessfully!");
+                return true;
+            } else if (label.equals("sbanip")) {
+                if (args.length != 1) {
+                    sender.sendMessage(ChatColor.RED + "Review your arguments!");
+                    return false;
+                }
+                if (!args[0].contains(".")) {
+                    sender.sendMessage(ChatColor.RED + "Is that an IP? Don't think so.");
+                    return false;
+                }
+                if (args[0].length() < 7) {
+                    sender.sendMessage(ChatColor.RED + "Don't you think that IP is too short? I think.");
+                }
+                for (Player p : this.getServer().getOnlinePlayers()) {
+                    generalBanCheckAction(p);
+                }
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Ip " + args[0] + " has been added to banned list sucessfully!");
+                return true;
+            } else if (label.equals("sbanipfromname")) {
+                if (args.length != 1) {
+                    sender.sendMessage(ChatColor.RED + "Review your arguments!");
+                    return false;
+                }
+                List<Player> matchPlayer = this.getServer().matchPlayer(args[0]);
+                if (matchPlayer.size() != 1) {
+                    sender.sendMessage(ChatColor.RED + "Player not found!");
+                    return false;
+                }
+                if (!args[0].contains(".")) {
+                    sender.sendMessage(ChatColor.RED + "Is that an IP? Don't think so.");
+                    return false;
+                }
+                if (args[0].length() < 7) {
+                    sender.sendMessage(ChatColor.RED + "Don't you think that IP is too short? I think.");
+                }
+                banOnlyIp(matchPlayer.get(0));
+                kickBanWarning(matchPlayer.get(0));
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "The IP from player " + matchPlayer.get(0).getName() + " has been added to banned list sucessfully!");
+                return true;
+            } else if (label.equals("sunban")) {
+                if (args.length != 1) {
+                    sender.sendMessage(ChatColor.RED + "Review your arguments!");
+                    return false;
+                }
+                String name = args[0];
+                unbanPlayer(name);
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player " + name + " has been unbanned sucessfully!");
+                return true;
+            } else if (label.equals("sunbanip")) {
+                if (args.length != 1) {
+                    sender.sendMessage(ChatColor.RED + "Review your arguments!");
+                    return false;
+                }
+                unbanIp(args[0]);
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "Ip " + args[0] + " has been unbanned sucessfully!");
+                return true;
+            } else if (label.equals("sreload")) {
+                loadBans();
+                saveHistory();
+                sender.sendMessage(ChatColor.LIGHT_PURPLE + "The file banlist.yml was reloaded!");
+                return true;
             }
-            List<Player> matchPlayer = this.getServer().matchPlayer(args[0]);
-            if (matchPlayer.size() != 1) {
-                sender.sendMessage(ChatColor.RED + "Player not found!");
-                return false;
-            }
-            banPlayer(matchPlayer.get(0));
-            kickBanWarning(matchPlayer.get(0));
-            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player " + matchPlayer.get(0).getName() + " has been banned sucessfully!");
-            return true;
-        } else if (label.equals("sbanhistory")) {
-            if (args.length != 1) {
-                sender.sendMessage(ChatColor.RED + "Review your arguments!");
-                return false;
-            }
-            String ip = getHistory(args[0]);
-            if (ip == null) {
-                sender.sendMessage(ChatColor.RED + "Player not found in history!");
-                return false;
-            }
-            banWithNameAndAddress(args[0], ip);
-            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player " + args[0] + " has been banned sucessfully!");
-            return true;
-        } else if (label.equals("sunban")) {
-            if (args.length != 1) {
-                sender.sendMessage(ChatColor.RED + "Review your arguments!");
-                return false;
-            }
-            String name = args[0];
-            unbanPlayer(name);
-            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Player " + name + " has been unbanned sucessfully!");
-            return true;
-        } else if (label.equals("sunbanip")) {
-            if (args.length != 1) {
-                sender.sendMessage(ChatColor.RED + "Review your arguments!");
-                return false;
-            }
-            unbanIp(args[0]);
-            sender.sendMessage(ChatColor.LIGHT_PURPLE + "Ip " + args[0] + " has been unbanned sucessfully!");
-            return true;
-        } else if (label.equals("sreload")) {
-            loadBans();
-            saveHistory();
-            sender.sendMessage(ChatColor.LIGHT_PURPLE + "The file banlist.yml was reloaded!");
-            return true;
+            return false;
+        } else {
+            sender.sendMessage(ChatColor.RED+"You don't have permissions to do this.");
         }
         return false;
     }
@@ -250,6 +296,21 @@ public class SimpleBan extends JavaPlugin {
             banList.save();
             //kickBanWarning(playerName);
         }
+    }
+
+    public void banOnlyIp(Player player) {
+        if (isGetAddressFailing(player)) {
+            return;
+        }
+        banOnlyIp(player.getAddress().getAddress().getHostAddress());
+        try {
+            player.remove();
+        } catch (Exception e) {
+        }
+    }
+
+    public void banOnlyIp(String address) {
+        banWithNameAndAddress("!ips-only!", address);
     }
 
     public void kickBanWarning(Player player) {
@@ -377,7 +438,7 @@ public class SimpleBan extends JavaPlugin {
 
     public boolean doesPlayerExist(String playerName) {
         if (playerExists.containsKey(playerName.toLowerCase())) {
-            System.out.println("Does "+playerName+" exists? "+playerExists.get(playerName.toLowerCase()));
+            System.out.println("Does " + playerName + " exists? " + playerExists.get(playerName.toLowerCase()));
             return playerExists.get(playerName.toLowerCase());
         }
         return false;
