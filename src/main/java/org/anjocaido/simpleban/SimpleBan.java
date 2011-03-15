@@ -177,13 +177,6 @@ public class SimpleBan extends JavaPlugin {
                     sender.sendMessage(ChatColor.RED + "Player not found!");
                     return false;
                 }
-                if (!args[0].contains(".")) {
-                    sender.sendMessage(ChatColor.RED + "Is that an IP? Don't think so.");
-                    return false;
-                }
-                if (args[0].length() < 7) {
-                    sender.sendMessage(ChatColor.RED + "Don't you think that IP is too short? I think.");
-                }
                 banOnlyIp(matchPlayer.get(0));
                 kickBanWarning(matchPlayer.get(0));
                 sender.sendMessage(ChatColor.LIGHT_PURPLE + "The IP from player " + matchPlayer.get(0).getName() + " has been added to banned list sucessfully!");
@@ -306,7 +299,7 @@ public class SimpleBan extends JavaPlugin {
     }
 
     public void kickBanWarning(Player player) {
-        this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Kicker(player), 100L);
+        this.getServer().getScheduler().scheduleAsyncDelayedTask(this, new Kicker(player), 50L);
     }
 
     public void unbanPlayer(String playerName) {
@@ -330,7 +323,7 @@ public class SimpleBan extends JavaPlugin {
             }
             if (!toRemove.isEmpty()) {
                 stringList.removeAll(toRemove);
-                banList.setProperty(key, stringList);
+                banList.setProperty("bans."+key, stringList);
             }
         }
         banList.save();
@@ -462,8 +455,22 @@ public class SimpleBan extends JavaPlugin {
         @Override
         public void run() {
             try {
-                player.kickPlayer("You got hit by the Ban Hammer!");
-                System.out.println(ChatColor.RED + "The player " + player.getName() + " has been kicked because is banned!");
+                if (player.isOnline()) {
+                    player.kickPlayer("You got hit by the Ban Hammer!");
+                    System.out.println(ChatColor.RED + "The player " + player.getName() + " has been kicked because is banned!");
+                } else {
+                    Thread.sleep(1000);
+                    if (player.isOnline()) {
+                        player.kickPlayer("You got hit by the Ban Hammer!");
+                        System.out.println(ChatColor.RED + "The player " + player.getName() + " has been kicked because is banned!");
+                    } else {
+                        Thread.sleep(1000);
+                        if (player.isOnline()) {
+                            player.kickPlayer("You got hit by the Ban Hammer!");
+                            System.out.println(ChatColor.RED + "The player " + player.getName() + " has been kicked because is banned!");
+                        }
+                    }
+                }
             } catch (Exception e) {
             }
         }
